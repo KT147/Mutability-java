@@ -44,4 +44,10 @@ public class Transaction {
     public void setTransactionAmount(double transactionAmount) {
         this.transactionAmount = transactionAmount;
     }
+
+    @Override
+    public String toString() {
+        return "%015d:%020d:%015d:%012.2f"
+                .formatted(routingNumber, customerId, transactionId, transactionAmount);
+    }
 }

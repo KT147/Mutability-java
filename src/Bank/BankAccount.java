@@ -2,6 +2,7 @@ package Bank;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -10,7 +11,7 @@ public class BankAccount {
 
     private final Type type;
     private double balance;
-    private Map<Long, Transaction> transactions = new HashMap<>();
+    private Map<Long, Transaction> transactions = new LinkedHashMap<>();
 
     BankAccount(Type type, double balance) {
         this.type = type;
@@ -25,15 +26,18 @@ public class BankAccount {
         return balance;
     }
 
-    public Map<Long, Transaction> getTransactions() {
-        return transactions;
+    public Map<Long, String> getTransactions() {
+        Map<Long, String> txMap = new HashMap<>();
+        for (var tx : transactions.entrySet()) {
+            txMap.put(tx.getKey(), tx.getValue().toString());
+        }
+        return txMap;
     }
 
-    public void commitTransaction(int routingNumber, long transactionId, int customerId, double amount) {
-        Transaction t = new Transaction(amount, transactionId, customerId, routingNumber);
-        transactions.put(transactionId, t);
+    void commitTransaction(int routingNumber, long transactionId, String customerId, double amount) {
         balance += amount;
-        System.out.println("Action done with amount " + amount + " and the balance is " + balance );
+        transactions.put(transactionId, (new Transaction(amount, transactionId, Integer.parseInt(customerId), routingNumber)));
+        System.out.println("Action done with amount " + amount + " and the balance is " + balance);
     }
 
     @Override
@@ -43,4 +47,5 @@ public class BankAccount {
                 ", balance=" + balance +
                 '}';
     }
+
 }

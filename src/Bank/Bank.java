@@ -5,41 +5,50 @@ import java.util.Map;
 
 public class Bank {
 
-    public static long lastTransactionId = 0;
-    private int routingNumber;
+    public final int routingNumber;
+    private long lastTransactionId = 1;
+    private final Map<String, BankCustomer> customers;
 
-    private Map<String, BankCustomer> customers = new HashMap<>();
+    public Bank(int routingNumber) {
+        this.routingNumber = routingNumber;
+        customers = new HashMap<>();
+    }
 
     public BankCustomer getCustomer(String id) {
         return customers.get(id);
     }
 
-    public int getRoutingNumber() {
-        return routingNumber;
-    }
+//    public int getRoutingNumber() {
+//        return routingNumber;
+//    }
 
     public void addCustomer(String name, double checkingInitialDeposit, double savingsInitialDeposit) {
         BankCustomer customer = new BankCustomer(name, checkingInitialDeposit, savingsInitialDeposit);
-        customers.put(name, customer);
+        customers.put(customer.getId(), customer);
         System.out.println("New customer added " + customer);
     }
 
-    public void doTransaction(String id, BankAccount.Type type, double amount) {
-        lastTransactionId++;
+    public boolean doTransaction(String id, BankAccount.Type type, double amount) {
 
         BankCustomer customer = getCustomer(id);
-        if (customer == null) return;
-
-        BankAccount account = customer.getAccount(type);
-        if (account == null) return;
-
-        account.commitTransaction(
-                routingNumber,
-                lastTransactionId,
-                Integer.parseInt(customer.getId()),
-                amount
-        );
-
-        System.out.println("Balance is " + account.getBalance());
+        if (customer != null) {
+            BankAccount account = customer.getAccount(type);
+            if (account != null) {
+                if ((account.getBalance() + amount) < 0) {
+                    System.out.println("Not enough funds");
+                } else {
+                    account.commitTransaction(
+                            routingNumber,
+                            lastTransactionId++,
+                            id,
+                            amount
+                    );
+                    return true;
+                }
+            }
+        } else {
+            System.out.println("Invalid customer id");
+        }
+        return false;
     }
 }

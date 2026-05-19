@@ -7,18 +7,18 @@ import java.util.List;
 public class BankCustomer {
     private static int lastInt = 10_000_000;
     private final int id;
-    private final String customer;
+    private final String name;
     private final List<BankAccount> accounts = new ArrayList<>();
 
     BankCustomer(String customer, double checkingAmount, double savingsAmount) {
-        this.customer = customer;
+        this.name = customer;
         this.id = lastInt++;
         accounts.add(new BankAccount(BankAccount.Type.CHECKING, checkingAmount));
         accounts.add(new BankAccount(BankAccount.Type.SAVINGS, savingsAmount));
     }
 
     public String getCustomer() {
-        return customer;
+        return name;
     }
 
     public String getId() {
@@ -40,9 +40,10 @@ public class BankCustomer {
 
     @Override
     public String toString() {
-       String[] accountStrings = new String[accounts.size()];
+
+        String[] accountStrings = new String[accounts.size()];
         Arrays.setAll(accountStrings, i -> accounts.get(i).toString());
-        String string = String.join(", " , accountStrings);
-        return customer + " " + id + " " + string;
+        return "Customer: %s (id:%015d)%n\t%s%n".formatted(name, id,
+                String.join("\n\t", accountStrings));
     }
 }
