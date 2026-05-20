@@ -21,7 +21,7 @@ public class ShooterGame extends Game<Shooter>{
                 'F', new GameAction('F', "Find Prize", this::findPrize),
                 'S', new GameAction('S', "Use your gun", this::useWeapon)
         ));
-        map.putAll(getStandardactions());
+        map.putAll(getStandardActions());
         return map;
     }
 

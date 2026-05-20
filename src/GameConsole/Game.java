@@ -10,7 +10,8 @@ public abstract class Game<T extends Player> {
 
     private final String gameName;
     private final List<T> players = new ArrayList<>();
-    private Map<Character, GameAction> standardactions = null;
+    private Map<Character, GameAction> standardActions = null;
+
 
     public Game(String gameName) {
         this.gameName = gameName;
@@ -20,14 +21,14 @@ public abstract class Game<T extends Player> {
         return gameName;
     }
 
-    public Map<Character, GameAction> getStandardactions() {
-        if (standardactions == null) {
-            standardactions = new LinkedHashMap<>(Map.of(
+    public Map<Character, GameAction> getStandardActions() {
+        if (standardActions == null) {
+            standardActions = new LinkedHashMap<>(Map.of(
                     'I', new GameAction('I', "Print Player Info", i -> this.printPlayer(i)),
                     'Q', new GameAction('Q', "Quit Game", i -> this.quitGame(i))
             ));
         }
-        return standardactions;
+        return standardActions;
     }
 
     abstract T createNewPlayer(String name);
